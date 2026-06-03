@@ -45,3 +45,7 @@ Useful links:
 ### Website Interface:
 The website interface of course is going to display information from the SQLite database as something human-readable.
 This can be a modified version of [my DTC 477 final](https://github.com/Simply-Spinach/DTC-477-Class-Site/tree/main/major_project) where all we change is that now the javascript integrates with my database instead of the libraries I previously complained about.
+
+## Putting it all together:
+There are a few tools to enable this to allow an app to be made from this.  For one, we could do something similar to tools like Jupyter Notebook where we run a local server ourselves and open the viewable app in a browser window.  This doesn't make any sense for this app, but allows me to use the data elsewhere at the very least, and enables us to easily replace modules.
+The better solution in my opinion would be to use a tool to convert html to an app the users can use.  This makes far more sense to me so then we could update the app with the user's location and means I don't need a server to run this app.
