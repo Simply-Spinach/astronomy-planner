@@ -6,8 +6,9 @@ t = ts.now()
 
 PLANET_ORDER = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto']
 
-lat = 48.02
-lon = -122.08
+#test coordinates
+lat = 0
+lon = 0
 
 curLocation = wgs84.latlon(lat,lon);
 
