@@ -24,14 +24,14 @@ CREATE TABLE CelestialEvent (
 );
 
 CREATE TABLE LocationDate (
+    loc_date_id INTEGER PRIMARY KEY NOT NULL,
     loc_id INTEGER NOT NULL,
-    loc_date_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    view_date date,
-    sunrise time,
-    sunset time,
+    view_date datetime,
+    sunrise datetime,
+    sunset datetime,
 
     FOREIGN KEY (loc_id) REFERENCES location(loc_id),
-    UNIQUE(loc_id, loc_date_id)
+    UNIQUE(loc_id, view_date)
 );
 
 CREATE TABLE Weather (
@@ -40,6 +40,7 @@ CREATE TABLE Weather (
     temp float,
     cloud_cover float,
     visibility float,
+    chance_precipitation float,
 
     FOREIGN KEY (loc_date_id) REFERENCES LocationDate(loc_date_id),
     UNIQUE(loc_date_id, hr)

@@ -36,6 +36,7 @@ class AstroData:
         #lat and lon may vary slightly but technically be for the same spot so merge them
         lat = meteoData.Latitude()
         lon = meteoData.Longitude()
+        timezone = meteoData.Timezone()
 
         #insert into location, or find matching location if exists
         #KNOWN BUG: INCREMENTS ON IGNORE, RESULTING IN RUNAWAY COUNTING.
@@ -56,7 +57,54 @@ class AstroData:
         
         #compute day
         daily = meteoData.Daily()
-            
+        daily_sunrise = daily.Variables(0).ValuesInt64AsNumpy().tolist()
+        daily_sunset = daily.Variables(1).ValuesInt64AsNumpy().tolist()
+        
+        day_start = daily.Time()
+        day_end = daily.TimeEnd()
+        day_interval = daily.Interval()
+
+        hourly = meteoData.Hourly()
+        hourly_temp = hourly.Variables(0).ValuesAsNumpy().tolist()
+        hourly_precipitation_prob = hourly.Variables(1).ValuesAsNumpy().tolist()
+        hourly_weather_code = hourly.Variables(2).ValuesAsNumpy().tolist()
+        hourly_cloud_cover = hourly.Variables(3).ValuesAsNumpy().tolist()
+        hourly_vis = hourly.Variables(4).ValuesAsNumpy().tolist()
+
+        for day in range(day_start, day_end, day_interval):
+            i = (day - day_start) // day_interval #just to keep track of indexes
+
+            #insert into LocationDate
+            cursor.execute('''
+                INSERT OR REPLACE INTO LocationDate (loc_id, view_date, sunrise, sunset) VALUES
+                           (?, date(?, 'unixepoch'), time(?, 'unixepoch'), time(?, 'unixepoch'))
+                           ''', (loc_id, day, daily_sunrise[i], daily_sunset[i]))
+            #get loc_date_id for weather
+            print(cursor.fetchall())
+            cursor.execute('''
+                SELECT loc_date_id FROM
+                           (SELECT loc_date_id, loc_id, view_date FROM LocationDate
+                           WHERE loc_id = ? AND view_date = date(?, 'unixepoch'))
+                           ''', (loc_id, day))
+            loc_date_id = cursor.fetchone()[0]
+
+            for hour in range(24):
+                hour_index_offset = (i - 1) * 24
+                hour_index = hour_index_offset + hour
+                time = day + (hourly.Interval() * hour)
+
+                temp = hourly_temp[hour_index]
+                cloud_cover = hourly_cloud_cover[hour_index]
+                visibility = hourly_vis[hour_index]
+                precipitation_prob = hourly_precipitation_prob[hour_index]
+
+                print(loc_date_id, hour, temp, cloud_cover, visibility, precipitation_prob)
+
+                #insert into Weather
+                cursor.execute('''
+                    INSERT INTO Weather (loc_date_id, hr, temp, cloud_cover, visibility, chance_precipitation) VALUES
+                               (?, ?, ? ,? ,? , ?)
+                               ''', (loc_date_id, hour, temp, cloud_cover, visibility, precipitation_prob))                
        
         #cleanup
         cursor.close()
@@ -81,9 +129,6 @@ class AstroData:
             "precipitation_unit": "inch",
         }
         return openmeteo.weather_api(url, params = params)[0]
-
-        
-
 
     def _exec_SQL_file(self, fileName):
         #prep variables

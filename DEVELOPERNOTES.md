@@ -3,7 +3,16 @@
 ## Current Todo list:
 - [ ] Create SQLite database to hold data on each planet's visibility
 - [ ] Create Python script to fill database (to be called incrementally)
+    - [ ] SQLite database currently needs to be updated by Skyfield (AstroObject and CelestialEvent)
 - [ ] Import and modify calendar app to use database instead of APIs I didn't like
+- [ ] Rename Init.py to something more descriptive
+
+Refer to bug tracker below for additional todos
+
+## Bug tracker:
+- [ ] Loc_date_id and all SQL INSERT OR REPLACE statements do not work properly and changes id when replacing.
+- [ ] Location is currently fixed in astroData.updateDatabase() rather than automatically changing with a gps location
+- [ ] Old data in SQLite is currently not deleted
 
 ## How this project works
 This planner will be divided into 3 key components:
