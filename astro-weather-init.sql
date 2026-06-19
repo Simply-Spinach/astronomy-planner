@@ -19,8 +19,9 @@ CREATE TABLE CelestialEvent (
     start_datetime DATETIME NOT NULL,
     end_datetime DATETIME NOT NULL,
 
-    FOREIGN KEY (loc_id) REFERENCES location(loc_id)
-    FOREIGN KEY (ast_obj_id) REFERENCES AstroObject(ast_obj_id)
+    FOREIGN KEY (loc_id) REFERENCES location(loc_id),
+    FOREIGN KEY (ast_obj_id) REFERENCES AstroObject(ast_obj_id),
+    UNIQUE (loc_id, ast_obj_id, end_datetime)
 );
 
 CREATE TABLE LocationDate (

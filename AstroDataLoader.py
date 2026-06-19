@@ -9,6 +9,8 @@ from retry_requests import retry
 
 #skyfield imports
 import skyfield
+from skyfield import api as sf_api
+from skyfield import load as sf_load
 
 class AstroData:
     def __init__(self):
@@ -104,8 +106,13 @@ class AstroData:
                 cursor.execute('''
                     INSERT INTO Weather (loc_date_id, hr, temp, cloud_cover, visibility, chance_precipitation) VALUES
                                (?, ?, ? ,? ,? , ?)
-                               ''', (loc_date_id, hour, temp, cloud_cover, visibility, precipitation_prob))                
-       
+                               ''', (loc_date_id, hour, temp, cloud_cover, visibility, precipitation_prob))
+
+        #Now to work on Skyfield    
+        ts = sf_load.timescale()
+        now = ts.now()            
+        sf_load("./de442s.bsp")
+        
         #cleanup
         cursor.close()
         self.sql.commit()
