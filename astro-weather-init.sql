@@ -8,8 +8,11 @@ CREATE TABLE Location (
 
 CREATE TABLE AstroObject (
     ast_obj_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    name varchar NOT NULL,
-    information varchar
+    skyfield_name varchar NOT NULL,
+    display_name varchar NOT NULL,
+    display_info varchar,
+    UNIQUE (skyfield_name),
+    UNIQUE (display_name)
 );
 
 CREATE TABLE CelestialEvent (

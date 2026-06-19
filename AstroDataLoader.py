@@ -10,7 +10,7 @@ from retry_requests import retry
 #skyfield imports
 import skyfield
 from skyfield import api as sf_api
-from skyfield import load as sf_load
+from skyfield.api import load as sf_load
 
 class AstroData:
     def __init__(self):
