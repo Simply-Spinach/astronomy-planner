@@ -1,6 +1,7 @@
 import time
 import sqlite3 as sql
 from enum import Enum
+from datetime import datetime
 
 from skyfield.api import load as sf_load
 from skyfield.api import wgs84 #handles positioning
@@ -33,7 +34,9 @@ PLANETS = [
         AstroObject('pluto', 'pluto barycenter', AO_type.DWARF_PLANET)
         ]
 
-def loadCelestialEvents(loc_id, time_start, time_end, sql_cursor):
+def loadCelestialEvents(loc_id, time_start, time_end, sql):
+
+        sql_cursor = sql.cursor()
         #set location
         sql_cursor.execute('''
                 SELECT lat, lon FROM Location
@@ -63,10 +66,12 @@ def loadCelestialEvents(loc_id, time_start, time_end, sql_cursor):
                         ''', [planet.sf_name])
                 ast_obj_id = sql_cursor.fetchone()
                 if ast_obj_id == None: #object doesn't exist yet.  Insert simple version without display_info
+                        print("Inserting non-existant AstroObject", planet.ad_name)
                         sql_cursor.execute('''
                                 INSERT INTO AstroObject (skyfield_name, display_name)
                                 VALUES (?,?)
                                 ''', [planet.sf_name, planet.ad_name])
+                        sql.commit()
                         sql_cursor.execute('''
                                 SELECT ast_obj_id FROM AstroObject
                                 WHERE skyfield_name = ?
@@ -83,22 +88,25 @@ def loadCelestialEvents(loc_id, time_start, time_end, sql_cursor):
                 rises_at = time_start.tt #set to current time as default (doesn't matter if it really started earlier right?)
                 for t, is_rising in zip(*find_discrete(time_start,time_end, testFunc)):
                         #note that t is in Julian date format, which is in days that need to be converted
-                        selected_time = t.utc
+                        selected_time = t.tt
 
                         if (is_rising):
                                 rises_at = selected_time
                         else: # not is_rising or in other words, setting
                                 sets_at = selected_time
-                                #sql_cursor.execute(''' INSERT INTO CelestialEvent (loc_id, ast_obj_id, start_datetime, end_datetime) VALUES
-                                #                   (?, ?, julianday(?), julianday(?))
-                                #                   ''', ())
-                                print(planet.ad_name, rises_at.tt_jd(), sets_at.tt_jd())
+                                sql_cursor.execute(''' INSERT OR IGNORE INTO CelestialEvent (loc_id, ast_obj_id, start_datetime, end_datetime) VALUES
+                                                   (?, ?, julianday(?), julianday(?))
+                                                   ''', [loc_id,ast_obj_id, rises_at, sets_at])
+        
+        #cleanup (still part of function)
+        sql_cursor.close()
+        sql.commit()
 
 sql_inst = sql.connect("astro_weather.db")
-cursor = sql_inst.cursor()
 
 ts = sf_load.timescale()
-loadCelestialEvents(1, ts.utc(2026,6,19), ts.utc(2026,6,22), cursor)
+time_start = ts.utc(2026,6,19)
+time_end = ts.utc(2026,6,22)
+loadCelestialEvents(1, time_start, time_end, sql_inst)
 
-cursor.close()
 sql_inst.close()

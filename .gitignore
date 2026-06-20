@@ -1,4 +1,4 @@
 de442s.bsp
 .ipynb_checkpoints
 .cache.sqlite
-astro_weather.db
+astro_weather*.db

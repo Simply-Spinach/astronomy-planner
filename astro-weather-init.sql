@@ -1,5 +1,5 @@
 CREATE TABLE Location (
-    loc_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    loc_id INTEGER PRIMARY KEY NOT NULL,
     lat INTEGER NOT NULL, 
     lon INTEGER NOT NULL,
 
@@ -7,18 +7,18 @@ CREATE TABLE Location (
 );
 
 CREATE TABLE AstroObject (
-    ast_obj_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    skyfield_name varchar NOT NULL,
+    ast_obj_id INTEGER PRIMARY KEY NOT NULL,
     display_name varchar NOT NULL,
+    skyfield_name varchar NOT NULL,
     display_info varchar,
     UNIQUE (skyfield_name),
     UNIQUE (display_name)
 );
 
 CREATE TABLE CelestialEvent (
-    loc_id INTEGER NOT NULL,
+    astro_event_id INTEGER PRIMARY KEY NOT NULL,
+    loc_id INTEGER DEFAULT NULL,
     ast_obj_id INTEGER NOT NULL,
-    astro_event_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     start_datetime DATETIME NOT NULL,
     end_datetime DATETIME NOT NULL,
 
