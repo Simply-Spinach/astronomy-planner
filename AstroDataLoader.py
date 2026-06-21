@@ -1,7 +1,9 @@
 import sqlite3
 import os
 from enum import Enum
-from datetime import datetime
+from datetime import date, timedelta
+import sys
+import warnings
 
 #openmeto imports
 import openmeteo_requests
@@ -50,17 +52,21 @@ class AstroData:
         dbReady = self._check_database_ready()
         self.sql = sqlite3.connect(self.DB_PATH)
 
+        #set default lat and lon
+        self.lat = 0
+        self.lon = 0
+
         if (not dbReady):
             self._exec_SQL_file('astro-weather-init.sql')
 
-        #update database with new source values
-        self.updateDatabase()
+    def setLocation(self, lat, lon):
+          self.lat = lat
+          self.lon = lon
 
     def updateDatabase(self):
         #get lat and lon on the fly and update it here (used everywhere, so it's computed here)
-        print("TODO: GET LAT AND LON UPDATED AUTOMATICALLY WITH USER")
-        lat = 20
-        lon = 100
+        lat = self.lat
+        lon = self.lon
 
         #create new cursor
         cursor = self.sql.cursor()
@@ -92,14 +98,18 @@ class AstroData:
         #load openMeteoData
         self.loadOpenMeteoData(meteoData, loc_id)
 
-        print("TODO: update timescales to update with current date")
+        #get current date and convert to timescales
+        curDate = date.today()
+        endDate = curDate + timedelta(days=14)
+
+        #create timescales from dates
         ts = sf_load.timescale()
-        time_start = ts.utc(2026,6,19)
-        time_end = ts.utc(2026,6,22)
+        time_start = ts.utc(curDate.year,curDate.month,curDate.day)
+        time_end = ts.utc(endDate.year, endDate.month, endDate.day)
 
         self._loadCelestialEvents(loc_id, lat, lon, time_start, time_end)
         
-        print(self.DB_PATH, "automatically updated with latest data")
+        print("Successfully updated", self.DB_PATH)
         #cleanup
         cursor.close()
         self.sql.commit()
@@ -251,3 +261,8 @@ class AstroData:
         return os.access(self.DB_PATH, os.F_OK)
     
 astroData = AstroData()
+if (len(sys.argv) >= 3):
+      astroData.setLocation(sys.argv[1], sys.argv[2])
+else:
+        warnings.warn("Location not provided.  Using default location", UserWarning)
+astroData.updateDatabase()
