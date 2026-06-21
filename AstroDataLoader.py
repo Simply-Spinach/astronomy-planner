@@ -1,3 +1,4 @@
+#general imports
 import sqlite3
 import os
 from enum import Enum
@@ -47,8 +48,8 @@ PLANETS = [
 
 
 class AstroData:
-    def __init__(self):
-        self.DB_PATH = './astro_weather.db'
+    def __init__(self, DB_PATH):
+        self.DB_PATH = DB_PATH
         dbReady = self._check_database_ready()
         self.sql = sqlite3.connect(self.DB_PATH)
 
@@ -260,7 +261,7 @@ class AstroData:
     def _check_database_ready(self):
         return os.access(self.DB_PATH, os.F_OK)
     
-astroData = AstroData()
+astroData = AstroData('./astro_weather.db')
 if (len(sys.argv) >= 3):
       astroData.setLocation(sys.argv[1], sys.argv[2])
 else:
