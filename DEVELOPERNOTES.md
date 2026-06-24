@@ -2,16 +2,16 @@
 
 ## Current Todo list:
 - [x] Create SQLite database to hold data on each planet's visibility
-- [ ] Create Python script to fill database (to be called incrementally)
+- [x] Create Python script to fill database (to be called incrementally)
     - [x] SQLite database currently needs to be updated by Skyfield (AstroObject and CelestialEvent)
 - [ ] Import and modify calendar app to use database instead of APIs I didn't like
-- [x] Rename Init.py to something more descriptive
 
 Refer to bug tracker below for additional todos
 
 ## Bug tracker:
 - [ ] Loc_date_id and all SQL INSERT OR REPLACE statements do not work properly and changes id when replacing.
-- [ ] Location is currently fixed in astroData.updateDatabase() rather than automatically changing with a gps location
+- [x] Location is currently fixed in astroData.updateDatabase() rather than automatically changing with a gps location
+    Implementation currently uses Python argument parameters to pass in longitude and latitude.  To be called by Java overhead
 - [x] Date is also currently fixed in astroData.updateDatabase() and doesn't dynamically update.
 - [ ] Old data in SQLite is currently not deleted
 

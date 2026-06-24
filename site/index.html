@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- meta tags and title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astronomy Calendar</title>
+
+    <!-- external and internal CSS -->
+    <link rel="stylesheet" href="styles.css" media="all">
+    <style>
+        /* in-file CSS here */
+    </style>
+
+    <!-- external and internal JavaScript -->
+    <script src="scripts.js" type="module" defer></script>
+    <script>
+        // in-page JavaScript here
+    </script>
+
+</head>
+
+<body class="no_content">
+
+    <nav>
+        <form id="citySearch">
+            <input type="text" name="searchbar" placeholder="Find astronomy information for a location">
+            <button type=submit>&#128269;</button>
+        </form>
+
+        <h1 id="location">
+            [Location here]
+        </h1>
+    </nav>
+
+    <main>
+        <!-- <div id="dayNavigator"> -->
+            <!-- <button class="daysPrev"> &#8592; </button> -->
+        <div id="dayIdentifier">
+                <div class="dayInfo">
+                    <img class="weatherIcon">
+                    <div style="align-content: center;">
+                        <h3 class="day">[day]</h3> <br>
+                        <span class="moonPhase">[phase]</span>
+                        <div class="timeframe"> 
+                            Sunset to sunrise: <span class="sunset">[sunset]</span> - <span class="sunrise"> [sunrise] </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dayLabel"> <!-- label for days we don't have weather info for -->
+                    <div>
+                        <h3 class="day">[day]</h3> <br>
+                        <span class="moonPhase">[phase]</span>
+                    </div>
+                </div>
+        </div>
+            <!-- <button class="daysNext"> &#8594; </button> -->
+        <!-- </div> -->
+        
+        </div>
+        
+        <div class="timeline-holder">
+            <h2> Planets </h2>
+            <div class="sectionType" id="planets">
+                <!-- Timeline tempalte object-->
+                <!-- Timeline tempalte object-->
+                <div class="timeline" >
+                    <div class="objectLabel">
+                        [Secret 9th planet]
+                    </div>
+                    <div class="line">
+                        <div class="lineSegment">
+                            <div class="left-cap"></div>
+                            <div class="left-bridge"><!-- used on Chromium because Chromium creates a gap for some reason --></div>
+                            <div class="right-cap"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+            <!--    
+            <div class="sectionType" id="constelations">
+                <h2> Constelations </h2>
+                <!-- Javascript uses same template as above, but currently not implenmented yet.  For a future time I guess
+            </div> -->
+        </ol>
+    </main>
+</body>
+
+</html>

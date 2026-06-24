@@ -1,0 +1,326 @@
+:root
+{
+    --bg-color: black;
+    --fg-color: whitesmoke;
+    --accent-color-1: #40279c;
+    --accent-color-2: #a79c3f;
+    --bg-accent-color: #333;
+    --link-color: #f6cd4c;
+
+    /* day selector styling */
+    --day-selector-gap: 80px;
+    --day-selector-width: 20rem;
+
+    --day-selector-left-padding: 30px;
+
+    --bg-accent-roundness: 20px;
+    --bg-accent-padding: 10px;
+
+    /* timeline elements */
+    --timeline-thickness: 1.5px;
+    --timeline-cap-thickness: 7px;
+    --timeline-cap-roundness: 20px;
+
+    --timeline-segment-width: calc(var(--day-selector-gap) + var(--day-selector-width));
+
+    /* button styling */
+    --button-roundness: 20px;
+    --button-color-default: #3a3a3a;
+    --button-color-hover: dimgray;
+    --button-transition-time: 0.7s;
+
+    /* Searchbar styling */
+    --searchbar-grow-time: 0.4s;
+
+    /* Tools and general info */
+    --main-width: calc(15 * var(--timeline-segment-width));
+}
+
+/* General changes */
+body
+{
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    font-family:sans-serif;
+}
+
+a 
+{
+    color: var(--link-color);
+}
+
+ol,
+ul
+{
+    /* We aren't using these in the typical format to just remove the padding by default */
+    padding-left: 0;
+}
+
+button
+{
+    border:none;
+    border-radius: var(--button-roundness);
+    background-color: var(--button-color-default);
+
+    transition: background-color var(--button-transition-time);
+}
+
+button:hover
+{
+    background-color: var(--button-color-hover);
+}
+
+input[type=text][name=searchbar]
+{
+    display: inline-block;
+    width: 20em;
+    border-radius: var(--button-roundness);
+    background-color: var(--bg-color);
+    color: var(--button-color);
+
+    transition: width var(--searchbar-grow-time);
+}
+
+input[type=text][name=searchbar]:focus
+{
+    width: 80%;
+    max-width: 90%;
+    color: var(--fg-color);
+    background-color: var(--bg-accent-color);
+}
+
+/* Main setup */
+
+main
+{
+    position: relative;
+    left: 0;
+    margin-top: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left:0;
+    border-right: 0;
+
+    width: 100;
+
+    overflow-x:scroll;
+
+    scroll-snap-type: x proximity;
+    scroll-padding-left: var(--day-selector-left-padding);
+
+}
+
+/* General dayIdentifier setup */
+
+main #dayNavigator
+{
+    position: block; /*Used instead of fixed so it takes up space in DOM*/
+    top: 0;
+
+    width: fit-content;
+    min-width: 100%;
+}
+
+main #dayIdentifier > *
+{
+    flex: 0 0 var(--timeline-segment-width);
+    overflow:hidden;
+    scroll-snap-align: start;
+}
+
+main #dayIdentifier,
+main .timeline .line
+{
+    position:relative;
+    left:0;
+
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+
+    justify-content: left; /*backup for unsupported browsers*/
+    justify-content: space-between;
+    align-items: center;
+}
+
+main #dayIdentifier
+{
+    column-gap: var(--day-selector-gap);
+    padding-left: var(--day-selector-left-padding);
+}
+
+main .timeline .line
+{
+    column-gap: 0;
+    padding-left: calc( var(--day-selector-left-padding) + var(--day-selector-width) / 2);
+}
+
+main #dayIdentifier > *
+{
+    flex: 0 0 var(--day-selector-width);
+}
+
+main .timeline .line > *
+{
+    flex: 0 0 var(--timeline-segment-width);
+}
+
+/* Navigation buttons */
+
+button.daysNext,
+button.daysPrev
+{
+    top: 75px;
+    position: fixed;
+    z-index: 10;
+}
+
+button.daysPrev
+{
+    left: 0;
+}
+
+button.daysNext
+{
+    right: 0;
+}
+
+/* Setup dayinfo to appear as desired */
+.dayIdentifier
+{
+    z-index:1;
+}
+
+.dayInfo
+{
+    width: 15rem;
+    display:grid;
+    grid-template-columns: auto auto;
+
+    background-color: var(--bg-accent-color);
+    border-radius: var(--bg-accent-roundness);
+    padding: var(--bg-accent-padding);
+}
+
+.dayInfo img
+{
+    height:75px;
+    width: 75px;
+}
+
+/* simplified variant for days without weather info*/
+.dayLabel
+{
+    display: flex;
+
+    width: 15rem;
+    min-height: 75px;
+    height: fit-content;
+
+    /*center text inside (yes, span is block.  Best solution at this point)*/
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--bg-accent-color);
+    border-radius: var(--bg-accent-roundness);
+    padding: var(--bg-accent-padding);
+}
+
+.dayInfo h3,
+.dayLabel h3
+{
+    margin: 0;
+}
+
+.dayLabel > div
+{
+    width: fit-content;
+    height: fit-content;
+}
+
+/* Setup timeline holder */
+
+.timeline-holder
+{
+    position:relative;
+    width: var(--main-width);
+}
+
+.timeline-holder h2
+{
+    position: sticky;
+    left:0;
+    top:0;
+    width: fit-content;
+    height: fit-content;
+}
+
+.timeline
+{
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: var(--main-width);
+}
+
+.timeline .objectLabel
+{
+    position:sticky;
+    width:fit-content;
+    left: 0;
+    padding-left: 20px;
+}
+
+.line > *
+{
+    overflow:visible;
+}
+
+.timeline .lineSegment
+{
+    position: relative;
+    height: var(--timeline-thickness);
+    width: max-content;
+    background-color: var(--fg-color);
+    text-justify: bottom;
+}
+
+.line .left-cap,
+.line .right-cap
+{
+    position: absolute;
+    background-color: var(--fg-color);
+    bottom: calc( (var(--timeline-thickness) / 2) - (var(--timeline-cap-thickness) /2));
+    width: var(--timeline-cap-thickness);
+    height: var(--timeline-cap-thickness);
+
+    border-radius: var(--timeline-cap-roundness)
+}
+
+.line .left-bridge
+{
+    position: absolute;
+    left: -1%;
+    width: 20px;
+    height: var(--timeline-thickness);
+    background-color: var(--fg-color);
+}
+
+.line .left-cap
+{
+    left: -1%;
+}
+
+.line .right-cap
+{
+    right: -1%;
+}
+
+
+.no_content #location,
+.no_content main
+{
+    display: none;
+}
