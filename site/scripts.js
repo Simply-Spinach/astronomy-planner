@@ -1,5 +1,4 @@
-import {getWeatherFromCoords, getWeatherFromCity} from "./weather_api.mjs"
-import {getForecastedAstronomyData} from "./astronomy_api.mjs"
+import "./sql-wasm.js"
 
 //prepare setup for modifying the dom
 document.addEventListener("DOMContentLoaded", function()
@@ -39,51 +38,22 @@ class domLoader
 
     setLocationCity(cityName)
     {
-        //update weather and pull lat/long from update to input into getForecastedAstronomyData
-        getWeatherFromCity(cityName).then((weatherData) => 
-        {
-            //update current weatherData
-            this.#weatherData = weatherData;
+        //TODO: request to update sqlite database with city data
 
-            //update forecastAstroData using lat and long pulled from weatherData for convenience
-            getForecastedAstronomyData(weatherData.location.lat, weatherData.location.lon, 0 /*No altitude data so setting to 0*/).then((astroData) =>
-            {
-                //update data from astroData
-                this.#astroData = astroData;
-                
-                //update visuals
-                this.update();
-            });
-        });
+        //update visuals
+        this.update();
     }
 
     async setLocationGPS()
     {
-        //get current location
-        if (navigator.geolocation)
-        {
-            navigator.geolocation.getCurrentPosition((location) =>
-            {
-                //load weather data
-                getWeatherFromCoords(location.coords.latitude, location.coords.longitude).then((e) =>
-                {
-                    this.#weatherData = e;
-                    //load astro data
-                    getForecastedAstronomyData(location.coords.latitude, location.coords.longitude, location.coords.altitude).then((e) =>
-                    {
-                        this.#astroData = e;
+        //TODO: get current location data from python file
+        lat = 0;
+        lon = 0;
 
-                        //update visuals
-                        this.update();
-                    });
-                });
+        //TODO: Update weatherData and astroData to contain updated location data
 
-            });
-        }
-        else
-        {
-            console.warn("GPS request failed.  Remember to implement backup method (like IP?)")
-        }
+        //update visuals
+        this.update();
     }
 
     clear()
